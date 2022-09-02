@@ -21,7 +21,7 @@ func ExampleHedgedClient() {
 	timeout := 10 * time.Millisecond
 	upto := 7
 	client := &http.Client{Timeout: time.Second}
-	hedged, err := hedgedhttp.NewClient(timeout, upto, client)
+	hedged, _, err := hedgedhttp.NewClient(timeout, upto, client)
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +46,7 @@ func ExampleHedgedRoundTripper() {
 	timeout := 10 * time.Millisecond
 	upto := 7
 	transport := http.DefaultTransport
-	hedged, stats, err := hedgedhttp.NewRoundTripperAndStats(timeout, upto, transport)
+	hedged, stats, err := hedgedhttp.NewRoundTripper(timeout, upto, transport)
 	if err != nil {
 		panic(err)
 	}
@@ -74,7 +74,7 @@ func ExampleInstrumented() {
 		Transport: http.DefaultTransport,
 	}
 
-	_, err := hedgedhttp.NewRoundTripper(time.Millisecond, 3, transport)
+	_, _, err := hedgedhttp.NewRoundTripper(time.Millisecond, 3, transport)
 	if err != nil {
 		panic(err)
 	}
@@ -103,7 +103,7 @@ func ExampleRatelimit() {
 		Limiter:   &RandomRateLimiter{},
 	}
 
-	_, err := hedgedhttp.NewRoundTripper(time.Millisecond, 3, transport)
+	_, _, err := hedgedhttp.NewRoundTripper(time.Millisecond, 3, transport)
 	if err != nil {
 		panic(err)
 	}
@@ -145,7 +145,7 @@ func ExampleMultiTransport() {
 		Hedged: &http.Transport{MaxIdleConns: 30}, // just an example
 	}
 
-	_, err := hedgedhttp.NewRoundTripper(time.Millisecond, 3, transport)
+	_, _, err := hedgedhttp.NewRoundTripper(time.Millisecond, 3, transport)
 	if err != nil {
 		panic(err)
 	}

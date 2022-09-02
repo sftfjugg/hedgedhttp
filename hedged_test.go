@@ -17,22 +17,22 @@ import (
 )
 
 func TestValidateInput(t *testing.T) {
-	_, _, err := hedgedhttp.NewClientAndStats(-time.Second, 0, nil)
+	_, _, err := hedgedhttp.NewClient(-time.Second, 0, nil)
 	if err == nil {
 		t.Fatalf("want err, got nil")
 	}
 
-	_, _, err = hedgedhttp.NewClientAndStats(time.Second, -1, nil)
+	_, _, err = hedgedhttp.NewClient(time.Second, -1, nil)
 	if err == nil {
 		t.Fatalf("want err, got nil")
 	}
 
-	_, _, err = hedgedhttp.NewClientAndStats(time.Second, 0, nil)
+	_, _, err = hedgedhttp.NewClient(time.Second, 0, nil)
 	if err == nil {
 		t.Fatalf("want err, got nil")
 	}
 
-	_, err = hedgedhttp.NewRoundTripper(time.Second, 0, nil)
+	_, _, err = hedgedhttp.NewRoundTripper(time.Second, 0, nil)
 	if err == nil {
 		t.Fatalf("want err, got nil")
 	}
@@ -52,7 +52,7 @@ func TestUpto(t *testing.T) {
 	}
 
 	const upto = 7
-	client, _ := hedgedhttp.NewClient(10*time.Millisecond, upto, nil)
+	client, _, _ := hedgedhttp.NewClient(10*time.Millisecond, upto, nil)
 
 	_, _ = client.Do(req)
 
@@ -75,7 +75,7 @@ func TestUptoWithInstrumentation(t *testing.T) {
 	}
 
 	const upto = 7
-	client, metrics, err := hedgedhttp.NewClientAndStats(10*time.Millisecond, upto, nil)
+	client, metrics, err := hedgedhttp.NewClient(10*time.Millisecond, upto, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -119,7 +119,7 @@ func TestNoTimeout(t *testing.T) {
 
 	const upto = 10
 
-	client, metrics, err := hedgedhttp.NewClientAndStats(0, upto, nil)
+	client, metrics, err := hedgedhttp.NewClient(0, upto, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -158,7 +158,7 @@ func TestFirstIsOK(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client, metrics, err := hedgedhttp.NewClientAndStats(10*time.Millisecond, 10, nil)
+	client, metrics, err := hedgedhttp.NewClient(10*time.Millisecond, 10, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -207,7 +207,7 @@ func TestBestResponse(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	client, metrics, err := hedgedhttp.NewClientAndStats(10*time.Millisecond, 5, nil)
+	client, metrics, err := hedgedhttp.NewClient(10*time.Millisecond, 5, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -266,7 +266,7 @@ func TestGetSuccessEvenWithErrorsPresent(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client, metrics, err := hedgedhttp.NewClientAndStats(10*time.Millisecond, int(upto), nil)
+	client, metrics, err := hedgedhttp.NewClient(10*time.Millisecond, int(upto), nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -321,7 +321,7 @@ func TestGetFailureAfterAllRetries(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client, metrics, err := hedgedhttp.NewClientAndStats(time.Millisecond, upto, nil)
+	client, metrics, err := hedgedhttp.NewClient(time.Millisecond, upto, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -376,7 +376,7 @@ func TestHangAllExceptLast(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	client, metrics, err := hedgedhttp.NewClientAndStats(10*time.Millisecond, upto, nil)
+	client, metrics, err := hedgedhttp.NewClient(10*time.Millisecond, upto, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -426,7 +426,7 @@ func TestCancelByClient(t *testing.T) {
 	}
 
 	upto := 5
-	client, metrics, err := hedgedhttp.NewClientAndStats(10*time.Millisecond, upto, nil)
+	client, metrics, err := hedgedhttp.NewClient(10*time.Millisecond, upto, nil)
 	if err != nil {
 		t.Fatalf("want nil, got %s", err)
 	}
@@ -479,7 +479,7 @@ func TestIsHedged(t *testing.T) {
 	}
 
 	const upto = 7
-	client, _ := hedgedhttp.NewRoundTripper(10*time.Millisecond, upto, rt)
+	client, _, _ := hedgedhttp.NewRoundTripper(10*time.Millisecond, upto, rt)
 
 	_, _ = client.RoundTrip(req)
 
